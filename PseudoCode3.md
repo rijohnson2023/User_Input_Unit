@@ -17,7 +17,7 @@
 ## Unsolved problems
 1. What to do about keywords specific to files, molecules, sets of atoms, or atoms
 2. Frozen Bond Angle, Bond length, or any modredundant information is still not collected at this point
-   - This might be a problem for the fileInput class
+   - This might be a problem for the fileInput class, we can regex those out {%s}{%d}{%d}{%s} for bond length and {%s}{%d}{%d}{%s} for bond angle
    - This might involve some work related to keywords specific to files, molecules, sets of atoms, or atoms
 3. What to do about basis set information that is going to go in the route section, not construct an object
 # Initial thoughts addressing unsolved problems:
@@ -55,7 +55,7 @@
     print(please note that molecules are specified by their filename and set of atoms)
     Menu4Input = 
     While Menu4Input != 1 and is an acceptable value:
-        Menu4:
+        Menu3:
            1. No Additional Inputs
            2. Keywords specific to File(s)
            3. Keywords specific to Molecule(s)
