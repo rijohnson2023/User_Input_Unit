@@ -2,6 +2,7 @@
 ui.Menus.py contains the tools to collect user input from the command line and format it into a header or footer object 
 """
 
+from ast import keyword
 import random
 import pyinputplus as pyip
 import pprint as pp
@@ -46,23 +47,23 @@ def kth_largest_items(data: dict[str:int], k: int=4) -> dict :
     return newDict
 
 
-def constr_opt(freqUsed: dict, recUsed: list, NoAddOption = False, Other=True, optCount=4) -> list[str]:
+def constr_opt(freqUsed: dict, recUsed: list, noAddOption = False, other=True, optCount=4) -> list[str]:
     # Construct list for menu
-    ui_Choices = list()
+    ui_choices = list()
 
     # Insert the additional input option
-    if NoAddOption == True : ui_Choices.insert(0,"[1] No Additional Inputs")
+    if noAddOption == True : ui_choices.insert(0,"No Additional Inputs")
 
     # Adding all of the most recently used keywords to the options 
-    [ui_Choices.append("[%d] %s" % (index1, elem)) for index1, elem in enumerate(recUsed,2)if recUsed.index(elem) < optCount]
-
+    [ui_choices.append("%s" % (keyword)) for keyword in recUsed if recUsed.index(keyword) < optCount]
+    
     # Adding the most frequently used data to the options
-    [ui_Choices.append("[%d] %s"% (index2, elem)) for index2, elem in enumerate(freqUsed.keys(),len(ui_Choices)+ 1)]
+    [ui_choices.append("%s"% keyword) for keyword in freqUsed.keys()]
 
     # Adding the option to type in a keyword not shown
-    if Other == True : ui_Choices.append('[%d] Other:' % (len(ui_Choices) + 1))
+    if other == True : ui_choices.append('other: ')
 
-    return ui_Choices
+    return ui_choices
 
 
 def valididate_other(input:str):
@@ -90,22 +91,23 @@ def Menu(freqUsed: dict[str:int], recUsed: list[str], inputTitle: str, AddInputs
     mostUsed = dict(sorted(mostUsed.items(),key=lambda elem: elem[1],reverse=True))
 
     # Construct the menu to be printed to the user
-    ui_Options = constr_opt(recUsed=recUsed, freqUsed=mostUsed, NoAddOption=AddInputs, optCount=optCount)
+    ui_options = constr_opt(recUsed=recUsed, freqUsed=mostUsed, noAddOption=AddInputs, optCount=optCount)
 
     # Print the options to the user
-    pp.pprint(ui_Options)
+    [print("[%2d] %-30s [%2d] %-30s" % (index1+1, elem1, int(len(ui_options)/2 + index1)+1, ui_options[int(len(ui_options)/2 + index1)]))
+    for index1, elem1 in enumerate(ui_options[:int(len(ui_options)/2)])]
 
     ui_list = list()
 
     # Collect first input
-    ui = pyip.inputNum(prompt = "Please select a %s: " % inputTitle, greaterThan=0, lessThan=(len(ui_Options)+1))
-    ui_list.append(ui_Options[ui-1])
+    ui = pyip.inputNum(prompt = "Please select a %s: " % inputTitle, greaterThan=0, lessThan=(len(ui_options)+1))
+    ui_list.append(ui_options[ui-1])
 
     # Prompts the user for multiple inputs in the instance when needed
-    while ui in range(2,(len(ui_Options)+1)) and AddInputs == True :
+    while ui in range(2,(len(ui_options)+1)) and AddInputs == True :
         ui = pyip.inputNum(prompt = "Please select another %s: " % inputTitle, greaterThan=0, lessThan=11)
-        if ui != 1 and ui != (len(ui_Options)-1) : ui_list.append(ui_Options[ui-1])
-        elif ui == (len(ui_Options)-1) : 
+        if ui != 1 and ui != (len(ui_options)-1) : ui_list.append(ui_options[ui-1])
+        elif ui == (len(ui_options)-1) :
             other = pyip.inputStr(prompt="Please type desired %s: " % inputTitle, applyFunc=valididate_other)
             ui_list.append(other)
 

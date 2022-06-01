@@ -116,52 +116,7 @@
     print(kLargestElems(Example,k))
     print(kLargestElems(Example,k).keys())
 
-# PyInputPlus Module
-
-> PyInputPlus has several functions for different kinds of input:
-
-- inputStr() Is like the built-in input() function but has the general PyInputPlus features. You can also pass a custom validation function to it
-- inputNum() Ensures the user enters a number and returns an int or float, depending on if the number has a decimal point in it
-- inputChoice() Ensures the user enters one of the provided choices
-- inputMenu() Is similar to inputChoice(), but provides a menu with numbered or lettered options
-- inputDatetime() Ensures the user enters a date and time
-- inputYesNo() Ensures the user enters a “yes” or “no” response
-- inputBool() Is similar to inputYesNo(), but takes a “True” or “False” response and returns a Boolean value
-- inputEmail() Ensures the user enters a valid email address
-- inputFilepath() Ensures the user enters a valid file path and filename, and can optionally check that a file with that name exists
-- inputPassword() Is like the built-in input(), but displays * characters as the user types so that passwords, or other sensitive information, aren’t displayed on the screen
-
-# PyInputPlus.inputMenu()
-
-inputMenu(choices, prompt='_default', default=None, blank=False, timeout=None, limit=None, strip=None, allowRegexes=None, blockRegexes=None, applyFunc=None, postValidateApplyFunc=None, numbered=False, lettered=False, caseSensitive=False)
-    Prompts the user to enter one of the provided choices.
-    Also displays a small menu with bulleted, numbered, or lettered options.
-    Returns the selected choice as a string.
-    
-    Run ``help(pyinputplus.parameters)`` for an explanation of the common parameters.
-    
-    >>> import pyinputplus as pyip
-    >>> response = pyip.inputMenu(['dog', 'cat'])
-    Please select one of the following:
-    * dog
-    * cat
-    DOG
-    >>> response
-    'dog'
-
-# PyInputPlus.inputCustom()
-
-inputCustom(customValidationFunc, prompt='', default=None, blank=False, timeout=None, limit=None, strip=None, allowRegexes=None, blockRegexes=None, applyFunc=None, postValidateApplyFunc=None)
-    Prompts the user to enter input. This is similar to Python's ``input()``
-    and ``raw_input()`` functions, but with PyInputPlus's additional features
-    such as timeouts, retry limits, stripping, allowlist/blocklist, etc.
-    
-    Validation can be performed by the ``customValidationFunc`` argument, which raises
-    an exception if the input is invalid. The exception message is used to
-    tell the user why the input is invalid.
-    
-    Run ``help(pyinputplus.parameters)`` for an explanation of the common parameters.
-    
-    * ``customValidationFunc`` (Callable): A function that is used to validate the input. Validation fails if it raises an exception, and the exception message is displayed to the user.
-    
-    >>> def raiseIfUppercase(text):
+Ensuring Valid User Input
+1. User cannot repeat a keyword -> collect sets, not lists
+   1. Don't want to use sets if don't have to, order could help/might matter later
+2. 
