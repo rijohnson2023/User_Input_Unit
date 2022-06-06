@@ -211,6 +211,7 @@ def main() :
                     update_mostFreq_data(route_mostFreq,route_cmds)
                 else:
                     pass # Skip over files that aren't good
+        # To catch all non G16 files on the computer
         except UnicodeDecodeError as ude:
             file_name = (file_path.split("/"))[len(file_path.split("/"))-1]
             print("  File, %s, %s" % (file_name,ude))
