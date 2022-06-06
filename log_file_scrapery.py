@@ -101,7 +101,7 @@ def check_log_file(file_path: str, file_obj: file_wrapper) -> bool :
     return check
 
 
-def extract_data(file_obj: file_wrapper) -> tuple[list[str]]:
+def extract_data(file_obj: file_wrapper) -> tuple[list[str]]: 
     # Initialize local var
     link0 = bytearray()
     route_cmds = bytearray()
@@ -162,13 +162,23 @@ def update_mostFreq_data(mostFreq_dict:dict[str:int], keywords:list[str]) -> Non
     [mostFreq_dict.update({elem:mostFreq_dict[elem]+1}) for elem in keywords if elem in mostFreq_dict.keys()]
     [mostFreq_dict.setdefault(elem,1) for elem in keywords if elem not in mostFreq_dict.keys()]
 
+
+def replace_filename(link0_list:list,file_path:str) -> list:
+    # Extract file string from the file path
+    file_str = file_path.split("/")[len(file_path.split("/"))-1].replace(".log","")
+    # Replace the file string with '__filename__'
+    return [keyword.replace(file_str,"__filename__") for keyword in link0_list if file_str in keyword]
+
+
 def order_dict(mostFreq_dict:dict[str:int]) -> tuple[str,int]:
     """Sort the data by the integer value from greatest to least"""
     return sorted(mostFreq_dict.items(),key=lambda elem: elem[1],reverse=True)
 
+
 def sorted_dict(mostFreq_dict:dict[str:int]) -> dict[str:int]:
     """Sort the data by the integer value from greatest to least"""
     return dict(sorted(mostFreq_dict.items(),key=lambda elem: elem[1],reverse=True))
+
 
 def export_data_json(data_path: str, link0_mostFreq: dict[str:int]=None,route_mostFreq: dict[str:int]=None) -> str :
     # Add the json extension to data_path
@@ -180,6 +190,7 @@ def export_data_json(data_path: str, link0_mostFreq: dict[str:int]=None,route_mo
         json.dump(data,file_obj)
     return data_path
 
+
 def main() :
     # Initialize variables
     link0_mostFreq = dict()
@@ -189,15 +200,23 @@ def main() :
 
     # Extract data from each file and update the mostFreq dictionaries
     for file_path in file_list :
-        with open(file_path,"rb") as infile :
-            # Ensure normal termination of G16
-            check = check_log_file(file_path=file_path,file_obj=infile)
-            if check : 
-                (link0, route_cmds) = extract_data(file_obj=infile)
-                update_mostFreq_data(link0_mostFreq,link0)
-                update_mostFreq_data(route_mostFreq,route_cmds)
-            else:
-                pass # Skip over files that aren't good
+        try:
+            with open(file_path,"rb") as infile :
+                # Ensure normal termination of G16
+                check = check_log_file(file_path=file_path,file_obj=infile)
+                if check : 
+                    (link0, route_cmds) = extract_data(file_obj=infile)
+                    link0 = replace_filename(link0,file_path)
+                    update_mostFreq_data(link0_mostFreq,link0)
+                    update_mostFreq_data(route_mostFreq,route_cmds)
+                else:
+                    pass # Skip over files that aren't good
+        except UnicodeDecodeError as ude:
+            file_name = (file_path.split("/"))[len(file_path.split("/"))-1]
+            print("  File, %s, %s" % (file_name,ude))
+        except FileNotFoundError as fne:
+            file_name = (file_path.split("/"))[len(file_path.split("/"))-1]
+            print("  File, %s, %s" % (file_name,fne))
 
     # Order the data to be written out to the files
     route_mostFreq = sorted_dict(route_mostFreq)
