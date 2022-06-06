@@ -1,17 +1,16 @@
 import os
 import pprint as pp
 
+# Locate the periodic table module
 from Apps import PeriodicTable as PT
 
 # Locate current working directory as destination for report
 cwd_path = os.getcwd()
-if not os.path.isdir(cwd_path + "/Data") :
-    os.mkdir(cwd_path + "/Data")
-
 dest_path = cwd_path + "/Data"
 
-# Locate the periodic table module
-
+# Create Data folder in repo if no data folder
+if not os.path.isdir(dest_path) :
+    os.mkdir(dest_path)
 
 # Directory with all of the .gbs files in it
 dir_name = '/Users/Riley/Documents/Research/Scraping/basis_set_bundle-gaussian94-bib' 
